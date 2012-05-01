@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta name=viewport content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Blag</title>
+    <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <link rel=stylesheet href="stylesheets/blueprint.css">
+    <link rel=stylesheet href="stylesheets/custom.css">
+</head>
+<body lang="en">
+<div class="container">
+    <div class="sidebar span-10">
+        <div class="dummy">
+            ok cook
+        </div>
+        <div class="banner">
+            <h3><a href="/">Yet Another Blag.</a></h3>
+            <p> <a href="/newpost">new</a> | <a href="#">github</a></p>
+        </div>
+    </div>
+    <div class="main span-14 last">
+        {% for post in posts %}
+            <div class="post">
+                <h3 class="post-subject"><a href="/post/{{post.id}}">{{ post.subject }}</a></h3>
+                <small>{{ post.created.strftime('%d %b') }}</small>
+                <div class="post-content">{{ post.content }}</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+	
+</html>
+

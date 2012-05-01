@@ -1,0 +1,116 @@
+/*	Typography presets
+	------------------	*/
+
+.gigantic {
+	font-size: 110px;
+	line-height: 120px;
+	letter-spacing: -2px;
+}
+
+.huge, h1 {
+	font-size: 68px;
+	line-height: 72px;
+	letter-spacing: -1px;
+}
+
+.large, h2 {
+	font-size: 42px;
+	line-height: 48px;
+}
+
+.bigger, h3 {
+	font-size: 26px;
+	line-height: 36px;
+}
+
+.big, h4 {
+	font-size: 22px;
+	line-height: 30px;
+}
+
+body {
+	font: 16px/24px Georgia, serif;
+}
+
+.small, small {
+	font-size: 13px;
+	line-height: 18px;
+}
+
+/* Selection colours (easy to forget) */
+
+::selection 	 	{background: #756199; color: white; text-shadow: none;}
+::-moz-selection 	{background: #756199; color: white; text-shadow: none;}
+img::selection 		{background: transparent;}
+img::-moz-selection	{background: transparent;}
+
+body {
+	background: #f9f9f9;
+	color: #34363E;
+    font-family: Georgia, serif;
+}
+
+a {
+    text-decoration: none;
+    color: #34363E;
+}
+
+.post-subject{
+    font-size: 14px;
+    font-family: "anisette-petite-sc-1","anisette-petite-sc-2";
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+a:hover {
+    color: #756199;
+}
+.post{
+    background: white; 
+    padding: 4em;
+    font-size: 14px;
+    margin-top: 20px;
+    border-bottom: 1px #333;
+}
+
+.banner {
+    position: fixed;
+    background: #34363E;
+    width: 300px;
+    height: 200px;
+    left: 300px;
+    top: 50px;
+    color: #f9f9f9;
+}
+
+.banner h3{
+    color: #f9f9f9;
+    font-size: 14px;
+    font-family: "anisette-petite-sc-1","anisette-petite-sc-2";
+    margin-left: 150px;
+    margin-top: 80px;
+}
+.banner p {
+    font-family: "anisette-petite-sc-1","anisette-petite-sc-2";
+    margin-left: 210px;
+    margin-top: -20px;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+.banner a {
+    color: #f9f9f9;
+    text-decoration: none;
+}
+
+.banner a:hover {
+    color: #756199;
+}
+
+.dummy{
+    visibility: hidden;
+}
+
+.post small{
+    float: right;
+    margin-top: -40px;
+}

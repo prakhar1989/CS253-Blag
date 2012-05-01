@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset=UTF-8>
+	<meta name=viewport content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Create a new post</title>
+    <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <link rel=stylesheet href="stylesheets/blueprint.css">
+    <link rel=stylesheet href="stylesheets/custom.css">
+</head>
+<body>
+<div class="container">
+    <h2>New Post</h2>
+	<div class=span-12>
+        <form method="post">
+            <p>
+              <label for="subject">Subject</label><br>
+              <input type="text" name="subject" value="{{subject}}">
+            </p>
+            <p>
+              <label for="content">Textarea</label><br>
+              <textarea name="content" rows="5" cols="20">{{content}}</textarea>
+            </p>
+            {% if error %}
+                <div class="error"> {{error}} </div>
+            {% endif %}
+            <p>
+                <input type="submit" value="Post!">
+            </p>
+        </form>
+    </div>
+</div>
+</body>
+</html>
