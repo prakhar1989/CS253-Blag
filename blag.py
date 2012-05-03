@@ -26,9 +26,9 @@ class Post(db.Model):
     subject = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
+    is_draft = db.BooleanProperty(indexed=False)
    
 class MainPage(Handler):
-    
     def get(self):
         posts = db.GqlQuery("SELECT * FROM Post ORDER BY created DESC")
         self.render("main.html", posts=posts)
@@ -44,11 +44,21 @@ class NewPostHandler(Handler):
         if subject and content:
             p = Post(subject = subject, content = content)
             p.put()
-
             self.redirect('/')
         else:
             error = "Both subject and content please!"
             self.render("newpost.html", subject = subject, content = content, error = error)
 
+
+class ShowPostHandler(Handler):
+    def get(self, post_id):
+        # my_post = db.GqlQuery("SELECT * FROM Post where __key__ = KEY('Post', 1)")
+        q = Post.all()
+        q.filter("subject=", "world")
+        results = q.fetch(2)
+        
+        self.render("showpost.html", posts = results)
+
 app = webapp2.WSGIApplication([('/', MainPage),
-                               ('/newpost', NewPostHandler)], debug=True)
+                               ('/newpost', NewPostHandler),
+                               ('/post/(\d+)', ShowPostHandler)], debug=True)
