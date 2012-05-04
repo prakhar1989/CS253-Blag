@@ -8,10 +8,11 @@
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     <link rel=stylesheet href="stylesheets/blueprint.css">
     <link rel=stylesheet href="stylesheets/custom.css">
+    <link rel=stylesheet href="stylesheets/github.css">
 </head>
 <body lang="en">
 <div class="container">
-    <div class="sidebar span-10">
+    <div class="sidebar span-6">
         <div class="dummy">
             ok cook
         </div>
@@ -20,16 +21,18 @@
             <p> <a href="/newpost">new</a> | <a href="https://github.com/prakhar1989/CS253-Blag">github</a></p>
         </div>
     </div>
-    <div class="main span-14 last">
+    <div class="main span-18 last">
         {% for post in posts %}
             <div class="post">
                 <h3 class="post-subject"><a href="/post/{{post.key().id()}}">{{ post.subject }}</a></h3>
                 <small>{{ post.created.strftime('%d %b') }}</small>
-                <div class="post-content">{{ post.content }}</div>
+                <div class="post-content">{{ post.content | safe }}</div>
             </div>
         {% endfor %}
     </div>
 </div>
+<script src="js/highlight.pack.js"> </script>
+<script>hljs.initHighlightingOnLoad();</script>
 </body>
 	
 </html>

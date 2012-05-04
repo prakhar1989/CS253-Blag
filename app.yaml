@@ -15,10 +15,14 @@ handlers:
 - url: /stylesheets
   static_dir: stylesheets
 
+- url: /js
+  static_dir: js
+
 - url: /.*
   script: blag.app
 
 libraries:
 - name: jinja2
   version: latest
-
+- name: markupsafe
+  version: latest

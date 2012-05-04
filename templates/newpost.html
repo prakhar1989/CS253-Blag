@@ -6,30 +6,44 @@
     <title>Create a new post</title>
     <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <link rel=stylesheet href="stylesheets/blueprint.css">
     <link rel=stylesheet href="stylesheets/custom.css">
 </head>
 <body>
 <div class="container">
-    <h2>New Post</h2>
 	<div class=span-12>
         <form method="post">
             <p>
-              <label for="subject">Subject</label><br>
-              <input type="text" name="subject" value="{{subject}}">
+            <input type="text" name="subject" placeholder="Title here" value="{{ subject }}">
             </p>
             <p>
-              <label for="content">Textarea</label><br>
-              <textarea name="content" rows="5" cols="20">{{content}}</textarea>
+            <img src="../static/md.png">
+            <textarea name="content" rows="8" cols="50" placeholder="Content here">{{content}}</textarea>
             </p>
+            <input type="checkbox" name="is_draft" style="visibility: hidden">
             {% if error %}
-                <div class="error"> {{error}} </div>
+            <div class="error"> {{error}} </div>
             {% endif %}
-            <p>
-                <input type="submit" value="Post!">
-            </p>
         </form>
     </div>
 </div>
+
+<div class="aside">
+    <div class="save function"></div>
+    <div class="save_as_draft function"></div>
+    <div class="view_drafts function"></div>
+    <div class="preview function"></div>
+</div>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script>
+        $('.save').click(function(){
+            $('form').submit();
+        });
+        $('.save_as_draft').click(function(){
+            $('input[name=is_draft]').attr('checked', true);
+            $('form').submit();
+        });
+    </script>
 </body>
 </html>

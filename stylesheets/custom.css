@@ -1,37 +1,6 @@
 /*	Typography presets
 	------------------	*/
 
-.gigantic {
-	font-size: 110px;
-	line-height: 120px;
-	letter-spacing: -2px;
-}
-
-.huge, h1 {
-	font-size: 68px;
-	line-height: 72px;
-	letter-spacing: -1px;
-}
-
-.large, h2 {
-	font-size: 42px;
-	line-height: 48px;
-}
-
-.bigger, h3 {
-	font-size: 26px;
-	line-height: 36px;
-}
-
-.big, h4 {
-	font-size: 22px;
-	line-height: 30px;
-}
-
-body {
-	font: 16px/24px Georgia, serif;
-}
-
 .small, small {
 	font-size: 13px;
 	line-height: 18px;
@@ -47,7 +16,6 @@ img::-moz-selection	{background: transparent;}
 body {
 	background: #f9f9f9;
 	color: #34363E;
-    font-family: Georgia, serif;
 }
 
 a {
@@ -56,9 +24,8 @@ a {
 }
 
 .post-subject{
-    font-size: 14px;
-    font-family: "anisette-petite-sc-1","anisette-petite-sc-2";
-    font-weight: 900;
+    font-size: 22px;
+    font-family: "adelle-1","adelle-2";
     text-transform: uppercase;
 }
 
@@ -68,12 +35,14 @@ a:hover {
 .post{
     background: white; 
     padding: 4em;
-    font-size: 14px;
+    font-size: 18px;
     margin-top: 20px;
     border-bottom: 1px #333;
+    font-family: "adelle-1","adelle-2";
 }
 
 .banner {
+    visibility: hidden;
     position: fixed;
     background: #34363E;
     width: 300px;
@@ -114,3 +83,132 @@ a:hover {
     float: right;
     margin-top: -40px;
 }
+
+form {
+    margin-top: 80px;
+}
+form input[type=text], textarea{
+    font-family: 'Lato', sans-serif;
+    background: none repeat scroll 0% 0% transparent;
+    color: #6D6D6D;
+    outline: 0pt none;
+    border: 0pt none;
+    margin: 0pt;
+    padding: 0pt;
+    font-size: 18px;
+}
+
+form input[type=text] {
+    color: #756199;
+    font-size: 26px;
+    font-weight: 700;
+}
+textarea { resize:vertical; min-height:400px; }
+textarea { resize:horizontal; min-width: 600px; }
+
+form img {
+    position: absolute;
+    top: 130px;
+    left: 130px;
+    opacity: 0.2;
+}
+
+.aside {
+    background: rgba(0,0,0,0.1);
+    position: fixed;
+    top: 200px;
+    left: 0px;
+}
+
+.aside:hover {
+    background: rgba(0,0,0,0.3);
+}
+
+.function {
+    height: 25px;
+    width: 25px;
+    cursor: pointer;
+    margin: 14px 8px;
+}
+.save {
+    background: url('../static/icons.png') -10px -10px; 
+}
+
+.save_as_draft {
+    background: url('../static/icons.png') 35px -8px;
+}
+
+.view_drafts {
+    background: url('../static/icons.png') 73px -9px;
+}
+
+.preview {
+    background: url('../static/icons.png') 111px -8px;
+}
+
+.save:hover {
+    background: url('../static/icons.png') -10px 27px; 
+}
+
+.save_as_draft:hover {
+    background: url('../static/icons.png') 35px 28px;
+}
+
+.view_drafts:hover {
+    background: url('../static/icons.png') 73px 28px;
+}
+
+.preview:hover {
+    background: url('../static/icons.png') 111px 29px;
+}
+
+
+/* Markdown CSS */
+
+.post h1{
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.post h2{
+    font-size: 16px;
+    font-weight: 800;
+}
+.post a{
+    color: #756199;
+}
+
+.post blockquote{
+    border-left: 10px solid #756199;
+    padding-left: 20px;
+    display: inline-block;
+    padding-bottom: 0;
+    margin-left: 0;
+    font-size: 15px;
+    line-height: 25px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    max-width: 430px;
+}
+
+.post blockquote p{
+    margin: 0px;
+}
+
+.post hr { display: block; height: 2px; border: 0; border-top: 1px solid #aaa;border-bottom: 1px solid #eee; margin: 1em 0; padding: 0; }
+.post pre code { 
+    font-family: 'consolas', monospace, monospace; 
+    border: none;
+    padding: 12px;
+    display: block;
+    border: 1px solid #D2D2D2;
+    background-color: #F8F8F8;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    font-size: 13px;
+    white-space: pre; white-space: pre-wrap; word-wrap: break-word;
+    color: black;
+}
+    
+
