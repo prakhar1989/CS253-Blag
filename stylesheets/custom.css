@@ -17,6 +17,7 @@ body {
 	background: #f9f9f9;
 	color: #34363E;
     font-family: "adelle-1","adelle-2", sans-serif;
+    border-top: 5px solid #756199;
 }
 
 a {
@@ -29,11 +30,33 @@ a:hover {
     color: #756199;
 }
 
+.banner {
+    color: #f9f9f9;
+    margin: 20px 0;
+}
+
+.banner-menu {
+    height: 82px;
+    color: #756199;
+    margin-left: 100px;
+}
+
+.banner-menu ul li{
+    list-style-type: none;
+    margin: 10px 30px;
+    float: left;
+}
+
+#logo{
+    float: left;
+    margin-top: 40px;
+}
 .header_post{
     background: url('../static/post_top.png') no-repeat 5px 0px;
     padding-left: 13px;
     position: relative;
 }
+
 .post{
     background: white bottom center;
     font-size: 18px;
@@ -57,10 +80,6 @@ a:hover {
 }
 .post-content{
     padding: 1.3em 4em;
-}
-.banner {
-    background: #756199;
-    color: #f9f9f9;
 }
 
 
@@ -88,10 +107,12 @@ form input[type=text] {
     color: #756199;
     font-size: 26px;
     font-weight: 700;
+    width: 600px;
 }
-textarea { resize:vertical; min-height:400px; }
-textarea { resize:horizontal; min-width: 600px; }
-
+form textarea {
+    width: 600px;
+    height: 400px;
+}
 form img {
     position: absolute;
     top: 130px;
@@ -174,7 +195,6 @@ form img {
     line-height: 25px;
     margin-top: 5px;
     margin-bottom: 15px;
-    max-width: 430px;
 }
 
 .post blockquote p{
