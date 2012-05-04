@@ -64,12 +64,45 @@ class ShowPostHandler(Handler):
         my_post = Post.get_by_id(int(post_id))
         self.render("showpost.html", my_post = my_post)
 
+class EditPostHandler(Handler):
+    def get(self, post_id):
+        my_post = Post.get_by_id(int(post_id))
+        self.render("editpost.html", subject = my_post.subject, content = my_post.content)
+
+    def post(self, post_id):
+        subject = self.request.get("subject")
+        content = Markup(markdown2.markdown(self.request.get("content")))
+        is_draft = self.request.get("is_draft")
+        
+        if subject and content:
+            my_post = Post.get_by_id(int(post_id))
+            my_post.subject = subject
+            my_post.content = content
+            my_post.is_draft = (is_draft == "on")
+            my_post.put()
+
+            if is_draft == "on":
+                self.redirect('/drafts')
+            else:
+                self.redirect('/post/' + str(my_post.key().id()))
+        else:
+            error = "Both subject and content please!"
+            self.render("editpost.html", subject = subject, content = content, error = error)
+
 class DraftHandler(Handler):
     def get(self):
         posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = TRUE ORDER BY created DESC")
         self.render("main.html", posts=posts)
 
+class DeletePostHandler(Handler):
+    def get(self, post_id):
+        my_post = Post.get_by_id(int(post_id))
+        my_post.delete()
+        self.redirect('/')
+
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/newpost', NewPostHandler),
                                ('/post/(\d+)', ShowPostHandler),
+                               ('/post/(\d+)/edit', EditPostHandler),
+                               ('/post/(\d+)/delete', DeletePostHandler),
                                ('/drafts',DraftHandler)], debug=True)

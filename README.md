@@ -7,6 +7,6 @@ Todo:
 - Permalink &#10003;
 - Cleaner interface of new posts &#10003;
 - Add markdown &#10003;
-- Edit Posts
+- Edit/Delete Posts &#10003;
 - Comments
 - Authentication

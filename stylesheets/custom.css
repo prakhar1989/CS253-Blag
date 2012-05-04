@@ -32,6 +32,7 @@ a:hover {
 .header_post{
     background: url('../static/post_top.png') no-repeat 5px 0px;
     padding-left: 13px;
+    position: relative;
 }
 .post{
     background: white bottom center;
@@ -54,7 +55,7 @@ a:hover {
     padding: 13px 15px 13px 10px;
 }
 .post-content{
-    padding: 1em 4em;
+    padding: 1.3em 4em;
 }
 .banner {
     background: #756199;
@@ -247,4 +248,27 @@ footer {
         
 }
 
+/* ACTION ICONS */
+.action-icons{
+    position: absolute;
+    top: 110px;
+    left: 0px;
 
+}
+
+.action-icons ul li {
+    list-style-type: none;
+}
+.action-icons a {
+    opacity: 0.3;
+}
+
+.action-icons a:hover {
+    opacity: 0.8;
+}
+
+.action-icons a img {
+    width: 18px;
+    height: 18px;
+    margin-top: 10px;
+}
