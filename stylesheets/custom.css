@@ -31,7 +31,7 @@ a:hover {
 
 .header_post{
     background: url('../static/post_top.png') no-repeat 5px 0px;
-    padding-left: 20px;
+    padding-left: 13px;
 }
 .post{
     background: white bottom center;
@@ -230,9 +230,21 @@ footer {
     float:left;
     list-style-type: none;
     margin: 2em 4em;
-    
+}
+
+.footer li a {
+    text-transform: uppercase;
 }
 
 .footer li:last-child {
     float:right;
 }
+
+.drop-shadow {
+-webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+   -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        
+}
+
+
