@@ -4,7 +4,7 @@ URL: [See it live](http://blagonudacity.appspot.com)
 
 Todo:
 
-- Permalink : Check
+- Permalink : &#10003; 
 - Cleaner interface of new posts : Check
 - Comments
 - Authentication
