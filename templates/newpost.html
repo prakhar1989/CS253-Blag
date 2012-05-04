@@ -18,7 +18,7 @@
             <input type="text" name="subject" placeholder="Title here" value="{{ subject }}">
             </p>
             <p>
-            <img src="../static/md.png">
+            <img src="../static/md.png" original-title="Supports Markdown!">
             <textarea name="content" rows="8" cols="50" placeholder="Content here">{{content}}</textarea>
             </p>
             <input type="checkbox" name="is_draft" style="visibility: hidden">
@@ -30,12 +30,12 @@
 </div>
 
 <div class="aside">
-    <div class="save function"></div>
-    <div class="save_as_draft function"></div>
-    <div class="view_drafts function"></div>
-    <div class="preview function"></div>
+    <div class="save function" original-title="Publish!"></div>
+    <div class="save_as_draft function" original-title ="Save as Draft!"></div>
+    <a href="/drafts"><div class="view_drafts function" original-title= "View Saved Drafts"></div></a>
 </div>
     <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery.tipsy.js"></script>
     <script>
         $('.save').click(function(){
             $('form').submit();
@@ -44,6 +44,13 @@
             $('input[name=is_draft]').attr('checked', true);
             $('form').submit();
         });
+        $('.view_drafts').click(function(){
+            $("a").click();
+        });
+        $('.save_as_draft').tipsy({gravity: 'w'});
+        $('.save').tipsy({gravity: 'w'});
+        $('.view_drafts').tipsy({gravity: 'w'});
+        $('img').tipsy({gravity: 'e'});
     </script>
 </body>
 </html>

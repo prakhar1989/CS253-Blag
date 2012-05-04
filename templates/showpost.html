@@ -11,20 +11,21 @@
 </head>
 <body lang="en">
 <div class="container">
-    <div class="sidebar span-10">
+    <div class="sidebar span-6">
         <div class="dummy">
             ok cook
         </div>
         <div class="banner">
             <h3><a href="/">Yet Another Blag.</a></h3>
-            <p> <a href="/newpost">new</a> | <a href="#">github</a></p>
+            <p> <a href="/newpost">new</a> | <a href="https://github.com/prakhar1989/CS253-Blag">github</a></p>
         </div>
     </div>
-    <div class="main span-14 last">
-        <div class="post">
-            <h3 class="post-subject">{{ my_post.subject }}</h3>
-            <div class="post-content">{{ my_post.content }}</div>
-        </div>
+    <div class="main span-18 last">
+    <div class="post">
+        <h3 class="post-subject">{{ my_post.subject }}</h3>
+        <small>Posted on {{ my_post.created.strftime('%d %b, %Y') }}</small>
+        <div class="post-content">{{ my_post.content | safe }}</div>
+    </div>
     </div>
 </div>
 </body>

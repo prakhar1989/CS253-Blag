@@ -13,19 +13,15 @@
 <body lang="en">
 <div class="container">
     <div class="sidebar span-6">
-        <div class="dummy">
-            ok cook
-        </div>
         <div class="banner">
             <h3><a href="/">Yet Another Blag.</a></h3>
-            <p> <a href="/newpost">new</a> | <a href="https://github.com/prakhar1989/CS253-Blag">github</a></p>
         </div>
     </div>
     <div class="main span-18 last">
         {% for post in posts %}
             <div class="post">
                 <h3 class="post-subject"><a href="/post/{{post.key().id()}}">{{ post.subject }}</a></h3>
-                <small>{{ post.created.strftime('%d %b') }}</small>
+                <small>Posted on {{ post.created.strftime('%d %b, %Y') }}</small>
                 <div class="post-content">{{ post.content | safe }}</div>
             </div>
         {% endfor %}
