@@ -8,5 +8,9 @@ Todo:
 - Cleaner interface of new posts &#10003;
 - Add markdown &#10003;
 - Edit/Delete Posts &#10003;
-- Comments
-- Authentication
+- Comments &#10003; 
+- Authentication 
+- Archives
+- RSS
+- Tags
+- Make it DRY!

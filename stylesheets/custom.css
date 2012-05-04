@@ -41,6 +41,7 @@ a:hover {
     border-bottom: 1px #333;
     font-family: "adelle-1","adelle-2";
     padding-top: 68px;
+    padding-bottom: 20px;
 }
 
 .post-subject{
@@ -180,7 +181,6 @@ form img {
     margin: 0px;
 }
 
-.post hr { display: block; height: 2px; border: 0; border-top: 1px solid #aaa;border-bottom: 1px solid #eee; margin: 1em 0; padding: 0; }
 .post pre code { 
     font-family: 'consolas', monospace, monospace; 
     border: none;
@@ -271,4 +271,16 @@ footer {
     width: 18px;
     height: 18px;
     margin-top: 10px;
+}
+
+/* DISQUS */
+#disqus_thread {
+    width: 600px;
+    margin: 10px auto;
+    font-size: 14px;
+}
+
+#disqus_thread h3{
+    font-size: 14px;
+    font-wieght: 400px;
 }
