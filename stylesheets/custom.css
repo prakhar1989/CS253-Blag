@@ -16,11 +16,30 @@ img::-moz-selection	{background: transparent;}
 body {
 	background: #f9f9f9;
 	color: #34363E;
+    font-family: "adelle-1","adelle-2", sans-serif;
 }
 
 a {
     text-decoration: none;
     color: #34363E;
+}
+
+
+a:hover {
+    color: #756199;
+}
+
+.header_post{
+    background: url('../static/post_top.png') no-repeat 5px 0px;
+    padding-left: 20px;
+}
+.post{
+    background: white bottom center;
+    font-size: 18px;
+    margin-top: 20px;
+    border-bottom: 1px #333;
+    font-family: "adelle-1","adelle-2";
+    padding-top: 68px;
 }
 
 .post-subject{
@@ -29,18 +48,14 @@ a {
     text-transform: uppercase;
 }
 
-a:hover {
-    color: #756199;
+.post-subject a{
+    background: #756199;
+    color: white !important;
+    padding: 13px 15px 13px 10px;
 }
-.post{
-    background: white; 
-    padding: 4em;
-    font-size: 18px;
-    margin-top: 20px;
-    border-bottom: 1px #333;
-    font-family: "adelle-1","adelle-2";
+.post-content{
+    padding: 1em 4em;
 }
-
 .banner {
     background: #756199;
     color: #f9f9f9;
@@ -50,6 +65,7 @@ a:hover {
 .post small{
     float: right;
     margin-top: -40px;
+    margin-right: 60px;
 }
 
 form {
@@ -206,3 +222,17 @@ form img {
 .tipsy-e .tipsy-arrow { right: 0; top: 50%; margin-top: -5px; border-left-style: solid; border-right: none; border-top-color: transparent; border-bottom-color: transparent; }
 .tipsy-w .tipsy-arrow { left: 0; top: 50%; margin-top: -5px; border-right-style: solid; border-left: none; border-top-color: transparent; border-bottom-color: transparent; }
 
+/* FOOTER */
+footer {
+    margin-top: 40px;
+}
+.footer li {
+    float:left;
+    list-style-type: none;
+    margin: 2em 4em;
+    
+}
+
+.footer li:last-child {
+    float:right;
+}

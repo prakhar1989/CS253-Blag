@@ -19,14 +19,28 @@
     </div>
     <div class="main span-18 last">
         {% for post in posts %}
-            <div class="post">
-                <h3 class="post-subject"><a href="/post/{{post.key().id()}}">{{ post.subject }}</a></h3>
-                <small>Posted on {{ post.created.strftime('%d %b, %Y') }}</small>
-                <div class="post-content">{{ post.content | safe }}</div>
+            <div class="header_post">
+                <div class="post">
+                    <h3 class="post-subject"><a href="/post/{{post.key().id()}}">{{ post.subject }}</a></h3>
+                    <small>Posted on {{ post.created.strftime('%d %b, %Y') }}</small>
+                    <div class="post-content">{{ post.content | safe }}</div>
+                </div>
             </div>
         {% endfor %}
     </div>
 </div>
+<footer>
+<nav>
+<ul class="footer">
+    <hr>
+    <div class="container">
+        <li><a href="./feeds/all.atom.xml">RSS</a></li>
+        <li><a href="https://github.com/prakhar1989">GitHub</a></li>
+        <li>&copy; 2012 Prakhar Srivastav.</li>
+    </div>
+</ul>
+</nav>
+</footer>
 <script src="js/highlight.pack.js"> </script>
 <script>hljs.initHighlightingOnLoad();</script>
 </body>
