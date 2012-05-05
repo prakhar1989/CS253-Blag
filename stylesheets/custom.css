@@ -36,9 +36,8 @@ a:hover {
 }
 
 .banner-menu {
-    height: 82px;
+    width: 82px;
     color: #756199;
-    margin-left: 100px;
 }
 
 .banner-menu ul li{
@@ -303,4 +302,22 @@ footer {
 #disqus_thread h3{
     font-size: 14px;
     font-wieght: 400px;
+}
+
+/* ARCHIVES */
+.listing {
+    margin-top: 50px;
+}
+.listing li {
+    list-style-type: none;
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+}
+
+.listing span {
+    float: right;
+}
+
+.listing a {
+    font-size: 18px;
 }

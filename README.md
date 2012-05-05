@@ -10,7 +10,9 @@ Todo:
 - Edit/Delete Posts &#10003;
 - Comments &#10003; 
 - Authentication 
-- Archives
+- Archives &#10003; 
+- Header with Nav
 - RSS
 - Tags
 - Make it DRY!
+- Make the design responsive

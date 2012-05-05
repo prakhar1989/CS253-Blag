@@ -94,15 +94,28 @@ class DraftHandler(Handler):
         posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = TRUE ORDER BY created DESC")
         self.render("main.html", posts=posts)
 
+class ArchiveHandler(Handler):
+    def get(self):
+        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
+        self.render("archives.html", posts=posts)
+
 class DeletePostHandler(Handler):
     def get(self, post_id):
         my_post = Post.get_by_id(int(post_id))
         my_post.delete()
         self.redirect('/')
 
+class XMLHandler(Handler):
+    def get(self):
+        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
+        self.response.headers['Content-Type'] = 'application/atom+xml'
+        self.render("xmltemplate.xml", posts=posts)
+       
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/newpost', NewPostHandler),
+                               ('/archives', ArchiveHandler),
                                ('/post/(\d+)', ShowPostHandler),
                                ('/post/(\d+)/edit', EditPostHandler),
                                ('/post/(\d+)/delete', DeletePostHandler),
+                               ('/feeds/all.atom.xml', XMLHandler),
                                ('/drafts',DraftHandler)], debug=True)

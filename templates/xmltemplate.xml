@@ -1,0 +1,21 @@
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Blag RSS Feed</title>
+    <link href="http://blagonudacity.appspot.com" rel="alternate" />
+    <link rel="self" href="http://blagonudacity.appspot.com/feeds/all.atom.xml" />
+    <id>http://www.blagonudacity.appspot.com/</id>
+    <updated>2012-05-04T00:00:02Z</updated>
+    {%for post in posts %}
+    <entry>
+        <title>{{post.subject}}></title>
+        <link href="http://www.blagonudacity.appspot.com/post/{{ post.key().id()}}" rel="alternate" />
+        <id>http://www.blagonudacity.appspot.com/post/{{ post.key().id()}}</id>
+        <updated>{{post.created.strftime("%Y-%m-%dT%H:%M:%SZ") }}</updated>
+        <author>
+            <name>Prakhar Srivastav</name>
+        </author>
+        <content type="html"> {{ post.content }} </content>
+    </entry>
+    {%endfor%}
+</feed>
+
+
