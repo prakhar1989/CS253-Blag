@@ -30,20 +30,18 @@ a:hover {
     color: #756199;
 }
 
-.banner {
-    color: #f9f9f9;
-    margin: 20px 0;
+.banner ul {
+    margin-top: 180px;
 }
-
-.banner-menu {
-    width: 82px;
-    color: #756199;
-}
-
-.banner-menu ul li{
+.banner ul li{
+    font-family: "adelle-1","adelle-2";
+    font-size: 16px;
     list-style-type: none;
-    margin: 10px 30px;
-    float: left;
+    margin: 15px 0px;
+    text-transform: uppercase;
+    background: #EAE8E9;
+    padding: 5px;
+    border-radius: 4px;
 }
 
 #logo{
@@ -320,4 +318,60 @@ footer {
 
 .listing a {
     font-size: 18px;
+}
+
+
+/* MEDIA QUERIES */
+
+/* Mobile */
+
+
+@media handheld, only screen and (max-width: 767px) {
+
+	body {
+        font-size: 11px;
+        -webkit-text-size-adjust: none;
+	}
+	
+	.row, body, .container {
+	width: 100%;
+	min-width: 0;
+	margin-left: 0px;
+	margin-right: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	}
+	
+	.row .onecol, .row .twocol, .row .threecol, .row .fourcol, .row .fivecol, .row .sixcol, .row .sevencol, .row .eightcol, .row .ninecol, .row .tencol, .row .elevencol, .row .twelvecol {
+	width: auto;
+	float: none;
+	margin-left: 0px;
+	margin-right: 0px;
+	padding-left: 20px;
+	padding-right: 20px;
+	}
+    
+    .span-18 {
+        width: 300px;
+    }
+    .post {
+        font-size: 14px;
+        padding: 0px;
+        margin: 0px;
+    }
+    .post a {
+        font-size: 14px;
+        margin: 20px 0px;
+    }
+
+    small {
+        margin: none;
+    }
+    .header_post {
+        background: white;
+    }
+    .post-content {
+        padding: 1.3em 1.3em;
+    }
+
 }

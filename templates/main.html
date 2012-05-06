@@ -6,22 +6,24 @@
     <title>Blag</title>
     <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <!-- 1140px Grid styles for IE -->
+	<!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
     <link rel=stylesheet href="stylesheets/blueprint.css">
     <link rel=stylesheet href="stylesheets/custom.css">
     <link rel=stylesheet href="stylesheets/github.css">
     <script type="text/javascript">
-
-    // GOOGLE ANALYTICS
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-31426786-1']);
-      _gaq.push(['_trackPageview']);
-
+    //Guages Analytics
+      var _gauges = _gauges || [];
       (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '4fa6b26af5a1f53b6000015d');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
       })();
-
     </script>
     
 </head>
@@ -30,7 +32,7 @@
     <div class="banner span-6">
         <a id="logo" href="/"><img src="../static/logo.png"/></a>
         <!-- <ul> -->
-        <!--     <li><a href="#">About</a></li> -->
+        <!--     <li><a href="/about">About</a></li> -->
         <!--     <li><a href="http://github.com/prakhar1989">Code</a></li> -->
         <!--     <li><a href="/archives">Archives</a></li> -->
         <!--     <li><a href="#">Search</a></li> -->
