@@ -1,34 +1,10 @@
-<!doctype html>
-<html>
-<head>
-	<meta charset=UTF-8>
-	<meta name=viewport content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
-    <title>Blag | Archives</title>
-    <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-    <link rel=stylesheet href="stylesheets/blueprint.css">
-    <link rel=stylesheet href="stylesheets/custom.css">
-    <script type="text/javascript">
-    // GOOGLE ANALYTICS
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-31426786-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-
-    </script>
-    
-</head>
-<body lang="en">
-<div class="container">
-    <div class="span-6">
-        <a id="logo" href="/"><img src="../static/logo.png"/></a>
-    </div>
-    <div class="main span-18 last">
+{% extends "base.html" %}
+{% block style_imports %}
+<link rel=stylesheet href="stylesheets/blueprint.css">
+<link rel=stylesheet href="stylesheets/custom.css">
+<link rel=stylesheet href="stylesheets/github.css">
+{% endblock %}
+{% block body %}
     <ul class="listing">
     {% for post in posts %}
         <li>
@@ -36,8 +12,4 @@
         </li>
     {% endfor %}
     </div>
-</div>
-</body>
-	
-</html>
-
+{% endblock %}

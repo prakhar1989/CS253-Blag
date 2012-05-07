@@ -11,8 +11,8 @@ Todo:
 - Comments &#10003; 
 - RSS &#10003;
 - Archives &#10003; 
+- Make it DRY! &#10003;
 - Authentication 
 - Header with Nav
 - Tags
-- Make it DRY!
 - Make the design responsive

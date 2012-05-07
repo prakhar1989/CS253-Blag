@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta name=viewport content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Blag</title>
+    <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <!-- 1140px Grid styles for IE -->
+	<!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
+    {% block style_imports %}{% endblock %}
+    <script type="text/javascript">
+    //Guages Analytics
+      var _gauges = _gauges || [];
+      (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '4fa6b26af5a1f53b6000015d');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+      })();
+    </script>
+    
+</head>
+<body lang="en">
+<div class="container">
+    <div class="banner span-6">
+        <a id="logo" href="/"><img src="../static/logo.png"/></a>
+        <!-- <ul> -->
+        <!--     <li><a href="/about">About</a></li> -->
+        <!--     <li><a href="http://github.com/prakhar1989">Code</a></li> -->
+        <!--     <li><a href="/archives">Archives</a></li> -->
+        <!--     <li><a href="#">Search</a></li> -->
+        <!-- </ul> -->
+    </div>
+    <div class="main span-18 last">
+        {% block body %} {% endblock %}
+    </div>
+</div>
+<footer>
+<nav>
+<ul class="footer">
+    <hr>
+    <div class="container">
+        <li><a href="./feeds/all.atom.xml">RSS</a></li>
+        <li><a href="https://github.com/prakhar1989">GitHub</a></li>
+        <li>&copy; 2012 Prakhar Srivastav.</li>
+    </div>
+</ul>
+</nav>
+</footer>
+<script src="js/highlight.pack.js"> </script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.tipsy.js"></script>
+<script>
+    $('.action-icons a').tipsy({gravity: 'e'});
+</script>
+</body>
+</html>

@@ -1,70 +1,18 @@
-<!doctype html>
-<html>
-<head>
-	<meta charset=UTF-8>
-	<meta name=viewport content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
-    <title>Blag</title>
-    <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-    <!-- 1140px Grid styles for IE -->
-	<!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
-    <link rel=stylesheet href="stylesheets/blueprint.css">
-    <link rel=stylesheet href="stylesheets/custom.css">
-    <link rel=stylesheet href="stylesheets/github.css">
-    <script type="text/javascript">
-    //Guages Analytics
-      var _gauges = _gauges || [];
-      (function() {
-        var t   = document.createElement('script');
-        t.type  = 'text/javascript';
-        t.async = true;
-        t.id    = 'gauges-tracker';
-        t.setAttribute('data-site-id', '4fa6b26af5a1f53b6000015d');
-        t.src = '//secure.gaug.es/track.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(t, s);
-      })();
-    </script>
-    
-</head>
-<body lang="en">
-<div class="container">
-    <div class="banner span-6">
-        <a id="logo" href="/"><img src="../static/logo.png"/></a>
-        <!-- <ul> -->
-        <!--     <li><a href="/about">About</a></li> -->
-        <!--     <li><a href="http://github.com/prakhar1989">Code</a></li> -->
-        <!--     <li><a href="/archives">Archives</a></li> -->
-        <!--     <li><a href="#">Search</a></li> -->
-        <!-- </ul> -->
-    </div>
-    <div class="main span-18 last">
-        {% for post in posts %}
-            <div class="header_post">
-                <div class="post drop-shadow">
-                    <h3 class="post-subject"><a href="/post/{{post.key().id()}}">{{ post.subject }}</a></h3>
-                    <small>Posted on {{ post.created.strftime('%d %b, %Y') }}</small>
-                    <div class="post-content">{{ post.content | safe }}</div>
-                </div>
-            </div>
-        {% endfor %}
+{% extends "base.html" %}
+{% block style_imports %}
+<link rel=stylesheet href="stylesheets/blueprint.css">
+<link rel=stylesheet href="stylesheets/custom.css">
+<link rel=stylesheet href="stylesheets/github.css">
+{% endblock %}
+
+{% block body %}
+{% for post in posts %}
+<div class="header_post">
+    <div class="post drop-shadow">
+        <h3 class="post-subject"><a href="/post/{{post.key().id()}}">{{ post.subject }}</a></h3>
+        <small>Posted on {{ post.created.strftime('%d %b, %Y') }}</small>
+        <div class="post-content">{{ post.content | safe }}</div>
     </div>
 </div>
-<footer>
-<nav>
-<ul class="footer">
-    <hr>
-    <div class="container">
-        <li><a href="./feeds/all.atom.xml">RSS</a></li>
-        <li><a href="https://github.com/prakhar1989">GitHub</a></li>
-        <li>&copy; 2012 Prakhar Srivastav.</li>
-    </div>
-</ul>
-</nav>
-</footer>
-<script src="js/highlight.pack.js"> </script>
-<script>hljs.initHighlightingOnLoad();</script>
-</body>
-	
-</html>
-
+{% endfor %}
+{% endblock %}
