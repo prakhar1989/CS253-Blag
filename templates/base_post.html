@@ -7,7 +7,8 @@
     <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-    {% block style_imports %}{% endblock %}
+    <link rel=stylesheet href="/stylesheets/blueprint.css">
+    <link rel=stylesheet href="/stylesheets/custom.css">
 </head>
 <body>
 <div class="container">
@@ -17,7 +18,7 @@
             <input type="text" name="subject" placeholder="Title here" value="{{ subject }}">
             </p>
             <p>
-            {% block img_import %}{% endblock %}
+            <img src="/static/md.png" original-title="Supports Markdown!">
             <textarea name="content" rows="8" cols="50" placeholder="Content here">{{content}}</textarea>
             </p>
             <input type="checkbox" name="is_draft" style="visibility: hidden">
@@ -33,23 +34,25 @@
     <div class="save_as_draft function" original-title ="Save as Draft!"></div>
     <a href="/drafts"><div class="view_drafts function" original-title= "View Saved Drafts"></div></a>
 </div>
-    <script type="text/javascript" src="../js/jquery.js"></script>
-    <script type="text/javascript" src="../js/jquery.tipsy.js"></script>
-    <script>
-        $('.save').click(function(){
-            $('form').submit();
-        });
-        $('.save_as_draft').click(function(){
-            $('input[name=is_draft]').attr('checked', true);
-            $('form').submit();
-        });
-        $('.view_drafts').click(function(){
-            $("a").click();
-        });
-        $('.save_as_draft').tipsy({gravity: 'w'});
-        $('.save').tipsy({gravity: 'w'});
-        $('.view_drafts').tipsy({gravity: 'w'});
-        $('img').tipsy({gravity: 'e'});
-    </script>
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery.tipsy.js"></script>
+
+<script>
+    $('.save').click(function(){
+        $('form').submit();
+    });
+    $('.save_as_draft').click(function(){
+        $('input[name=is_draft]').attr('checked', true);
+        $('form').submit();
+    });
+    $('.view_drafts').click(function(){
+        $("a").click();
+    });
+    $('.save_as_draft').tipsy({gravity: 'w'});
+    $('.save').tipsy({gravity: 'w'});
+    $('.view_drafts').tipsy({gravity: 'w'});
+    $('img').tipsy({gravity: 'e'});
+</script>
 </body>
 </html>
