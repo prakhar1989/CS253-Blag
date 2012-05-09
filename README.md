@@ -14,5 +14,6 @@ Todo:
 - Make it DRY! &#10003;
 - Authentication 
 - Header with Nav
+- Search feature
 - Tags
 - Make the design responsive

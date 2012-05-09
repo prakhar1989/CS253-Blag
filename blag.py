@@ -14,6 +14,8 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
 
 import markdown2
+import auth_helpers
+
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -111,9 +113,60 @@ class XMLHandler(Handler):
         self.response.headers['Content-Type'] = 'application/atom+xml'
         self.render("xmltemplate.xml", posts=posts)
        
+class User(db.Model):
+    email = db.StringProperty(required = True)
+    encrypted_pass = db.StringProperty(required = True)
+
+class RegisterHandler(Handler):
+    def get(self):
+        self.render("register_form.html")
+
+    def post(self):
+        #STEPS
+        #1. STORE IN DATABASE
+        #2. SET COOKIE
+        user_email  = self.request.get("email")
+        user_password = self.request.get("password")
+        user_verify = self.request.get("verify")
+        
+        check_email = valid_helpers.valid_email(user_email)
+        check_password = valid_helpers.valid_password(user_password)
+        check_verify = valid_helpers.valid_verify(user_password, user_verify)
+
+        params = dict(user_email = user_email)
+        have_error = False
+        query = User.all(keys_only = True).filter("email", user_email)
+        if not(check_email):
+            params['error_email'] = "Thats an invalid email"
+            have_error = True
+        if not(check_password):
+            params['error_password'] = "Thats not a valid password"
+            have_error = True
+        if not(check_verify):
+            params['error_verify'] = "Your passwords don't match"
+            have_error = True
+        if not have_error:
+            existing_user = query.get()
+            if existing_user:
+                params["error_email"] = "A user with this email already exists"
+                have_error = True
+        if have_error:
+            self.render("register_form.html", **params)
+        else:
+            encrypted_pass = auth_helpers.make_pw_hash(user_email, user_password)
+            user = User(email = user_email, password = user_password)
+            user.put()
+            existing_user = query.get()
+            user_id = existing_user.id()
+            user_hash = auth_helpers.make_secure_val(str(user_id))
+            self.response.headers.add_headers("Set-Cookie", "user = %s" % str(user_hash))
+            self.redirect('/')
+
+
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/newpost', NewPostHandler),
                                ('/archives', ArchiveHandler),
+                               ('/register', RegisterHandler),
                                ('/post/(\d+)', ShowPostHandler),
                                ('/post/(\d+)/edit', EditPostHandler),
                                ('/post/(\d+)/delete', DeletePostHandler),
