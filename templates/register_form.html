@@ -1,0 +1,30 @@
+<form method="post">
+    <div class="control-group {% if error_email %} error {% endif %} ">
+        <label class="control-label">Email</label>
+            <div class="controls">
+                <input type="text" name="email" value={{user_email}}>
+                <span class="help-inline error">{{error_email}}</span>
+            </div>
+    </div>
+    
+    <div class="control-group {% if error_password %} error {% endif %} ">
+        <label class="control-label">Password</label>
+            <div class="controls">
+                <input type="password" name="password">
+                <span class="help-inline error">{{error_password}}</span>
+            </div>
+    </div>
+
+    <div class="control-group {% if error_verify %} error {% endif %} ">
+        <label class="control-label">Verify Password</label>
+            <div class="controls">
+                <input type="password" name="verify">
+                <span class="help-inline error">{{error_verify}}</span>
+            </div>
+    </div>
+
+
+    <div class="actions">
+        <button type="submit" class="btn primary">Signup!</button>
+    </div>
+</form>

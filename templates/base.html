@@ -29,6 +29,16 @@
 </head>
 <body lang="en">
 <div class="container">
+    <section id="login_box">
+        <form action="/login" method="post">
+            <label>Email
+                <input type="text" />
+            </label>
+            <label>Password
+                <input type="password">
+            </label>
+        </form>
+    </section>
     <div class="banner span-6">
         <a id="logo" href="/"><img src="../static/logo.png"/></a>
         <!-- <ul> -->
@@ -42,6 +52,7 @@
         {% block body %} {% endblock %}
     </div>
 </div>
+<!-- FOOTER BEGINS HERE -->
 <footer>
 <nav>
 <ul class="footer">
@@ -49,11 +60,13 @@
     <div class="container">
         <li><a href="./feeds/all.atom.xml">RSS</a></li>
         <li><a href="https://github.com/prakhar1989">GitHub</a></li>
+        <li><a href="#" id="login_link">Login</a></li>
         <li>&copy; 2012 Prakhar Srivastav.</li>
     </div>
 </ul>
 </nav>
 </footer>
+<!-- FOOTER ENDS HERE -->
 <script src="js/highlight.pack.js"> </script>
 <script>hljs.initHighlightingOnLoad();</script>
 <script type="text/javascript" src="/js/jquery.js"></script>

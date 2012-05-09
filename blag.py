@@ -15,6 +15,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
 
 import markdown2
 import auth_helpers
+import valid_helpers
 
 
 class Handler(webapp2.RequestHandler):
@@ -122,9 +123,6 @@ class RegisterHandler(Handler):
         self.render("register_form.html")
 
     def post(self):
-        #STEPS
-        #1. STORE IN DATABASE
-        #2. SET COOKIE
         user_email  = self.request.get("email")
         user_password = self.request.get("password")
         user_verify = self.request.get("verify")
@@ -154,12 +152,12 @@ class RegisterHandler(Handler):
             self.render("register_form.html", **params)
         else:
             encrypted_pass = auth_helpers.make_pw_hash(user_email, user_password)
-            user = User(email = user_email, password = user_password)
+            user = User(email = user_email, encrypted_pass = encrypted_pass)
             user.put()
             existing_user = query.get()
             user_id = existing_user.id()
             user_hash = auth_helpers.make_secure_val(str(user_id))
-            self.response.headers.add_headers("Set-Cookie", "user = %s" % str(user_hash))
+            self.response.headers.add_header("Set-Cookie", "user_id = %s" % str(user_hash))
             self.redirect('/')
 
 
