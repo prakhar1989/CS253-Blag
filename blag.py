@@ -1,12 +1,14 @@
 import os
 import sys
 import webapp2
+import json
 import jinja2
 import datetime
 import time
 import markupsafe
 from markupsafe import Markup, escape
 from google.appengine.ext import db
+from webapp2_extras import sessions
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
@@ -33,6 +35,7 @@ class Post(db.Model):
     subject = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
+    last_modified = db.DateTimeProperty(auto_now_add = True)
     is_draft = db.BooleanProperty()
    
 class MainPage(Handler):
@@ -40,6 +43,18 @@ class MainPage(Handler):
         posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
         self.render("main.html", posts=posts)
     
+class JsonPostHandler(Handler):
+    def get(self):
+        self.response.headers['Content-type'] = 'application/json'
+        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
+        post_dict = []
+        for my_post in posts:
+            post_dict.append({"subject" : my_post.subject, "content" : my_post.content, 
+                            "created" : my_post.created.strftime('%a %b %d %H:%M:%S %Y'),
+                            "last_modified" : my_post.last_modified.strftime('%a %b %d %H:%M:%S %Y')})
+
+        self.write(json.dumps(post_dict))
+
 class NewPostHandler(Handler):
     def get(self):
         self.render("newpost.html")
@@ -63,9 +78,17 @@ class NewPostHandler(Handler):
 
 class ShowPostHandler(Handler):
     def get(self, post_id):
-        # my_query = db.GqlQuery("SELECT * FROM Post where __key__ = KEY('Post', " +  post_id + ")")
         my_post = Post.get_by_id(int(post_id))
         self.render("showpost.html", my_post = my_post)
+
+class ShowPostJsonHandler(Handler):
+    def get(self, post_id):
+        self.response.headers['Content-type'] = 'application/json'
+        my_post = Post.get_by_id(int(post_id))
+        post_dict = {"subject" : my_post.subject, "content" : my_post.content, 
+                    "created" : my_post.created.strftime('%a %b %d %H:%M:%S %Y'),
+                    "last_modified" : my_post.last_modified.strftime('%a %b %d %H:%M:%S %Y')}
+        self.write(json.dumps(post_dict))
 
 class EditPostHandler(Handler):
     def get(self, post_id):
@@ -75,6 +98,7 @@ class EditPostHandler(Handler):
     def post(self, post_id):
         subject = self.request.get("subject")
         content = Markup(markdown2.markdown(self.request.get("content")))
+        last_modified = datetime.datetime.now()
         is_draft = self.request.get("is_draft")
         
         if subject and content:
@@ -160,12 +184,38 @@ class RegisterHandler(Handler):
             self.response.headers.add_header("Set-Cookie", "user_id = %s" % str(user_hash))
             self.redirect('/')
 
+class LoginHandler(Handler):
+    def post(self):
+        user_email = self.request.get("email")
+        user_password = self.request.get("password")
+        query = User.all().filter("email", user_email)
+        user = query.get()
+        params = dict(user_email = user_email)
+        if user:
+            check_authentic_user = auth_helpers.valid_pw(user_email, user_password, user.encrypted_pass)
+            if check_authentic_user:
+                user_hash = auth_helpers.make_secure_val(str(user.key().id()))
+                #TODO: set flash message
+                self.response.headers.add_header("Set-Cookie", "user_id = %s" % str(user_hash))
+                self.redirect('/archives')
+            else:
+                #TODO: set flash message
+                params["error_login"] = "Invalid email/password combination"
+                self.redirect('/')
+        else:
+            #TODO: set flash message
+            params["error_login"] = "Invalid email/password combination"
+            self.redirect('/')
+
 
 app = webapp2.WSGIApplication([('/', MainPage),
+                               ('/.json', JsonPostHandler),
                                ('/newpost', NewPostHandler),
                                ('/archives', ArchiveHandler),
                                ('/register', RegisterHandler),
+                               ('/login', LoginHandler),
                                ('/post/(\d+)', ShowPostHandler),
+                               ('/post/(\d+).json', ShowPostJsonHandler),
                                ('/post/(\d+)/edit', EditPostHandler),
                                ('/post/(\d+)/delete', DeletePostHandler),
                                ('/feeds/all.atom.xml', XMLHandler),

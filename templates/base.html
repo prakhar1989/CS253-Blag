@@ -32,11 +32,15 @@
     <section id="login_box">
         <form action="/login" method="post">
             <label>Email
-                <input type="text" />
+                <input type="text" name="email" value = "{{ user_email }}"/>
             </label>
             <label>Password
-                <input type="password">
+                <input type="password" name="password">
             </label>
+            <input type="submit" value="Login">
+            {% if error_login %}
+                <p class="error">{{ error_login }}</p>
+            {% endif %}
         </form>
     </section>
     <div class="banner span-6">
@@ -60,7 +64,7 @@
     <div class="container">
         <li><a href="./feeds/all.atom.xml">RSS</a></li>
         <li><a href="https://github.com/prakhar1989">GitHub</a></li>
-        <li><a href="#" id="login_link">Login</a></li>
+        <!-- <li><a href="#" id="login_link">Login</a></li> -->
         <li>&copy; 2012 Prakhar Srivastav.</li>
     </div>
 </ul>
@@ -73,6 +77,11 @@
 <script type="text/javascript" src="/js/jquery.tipsy.js"></script>
 <script>
     $('.action-icons a').tipsy({gravity: 'e'});
+
+    //login box code
+    $('#login_link').click(function(){
+        $('#login_box').show();
+    });
 </script>
 </body>
 </html>

@@ -3,6 +3,7 @@
 <div class="header_post">
     <div class="post drop-shadow">
         <h3 class="post-subject"><a href="#">{{ my_post.subject }}</a></h3>
+        <!--
         <div class="action-icons">
         <ul>
             <li><a href="/post/{{ my_post.key().id() }}/edit" original-title="Edit Post!"><img src="../static/edit.png"></img></a></li>
@@ -12,6 +13,7 @@
                     else return false;"><img src="../static/trash.png"></img></a></li>
         </ul>
         </div>
+        --!>
         <small>Posted on {{ my_post.created.strftime('%d %b, %Y') }}</small>
         <div class="post-content">{{ my_post.content | safe }}</div>
         <hr>
