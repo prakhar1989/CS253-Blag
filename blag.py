@@ -8,7 +8,6 @@ import time
 import markupsafe
 from markupsafe import Markup, escape
 from google.appengine.ext import db
-from webapp2_extras import sessions
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
@@ -31,6 +30,138 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
+    def set_secure_cookie(self, name, val):
+        cookie_val = auth_helpers.make_secure_val(val)
+        self.response.headers.add_header(
+                'Set-Cookie', "%s=%s; Path=/" % (name, cookie_val))
+
+    def read_secure_cookie(self, name):
+        cookie_val = self.request.cookies.get(name)
+        return cookie_val and auth_helpers.check_secure_val(cookie_val)
+
+    def login(self, user):
+        self.set_secure_cookie('user_id', str(user.key().id()))
+
+    def logout(self):
+        self.response.headers.add_header('Set-Cookie', 'user_id=; Path=/')
+
+    def initialize(self, *a, **kw):
+        webapp2.RequestHandler.initialize(self, *a, **kw)
+        uid = self.read_secure_cookie('user_id')
+        self.user = uid and User.by_id(int(uid))
+
+def users_key(group = "default"):
+    return db.Key.from_path('users', group)
+
+### AUTH STUFF ###
+class User(db.Model):
+    username = db.StringProperty(required = True)
+    email = db.StringProperty()
+    pw_hash = db.StringProperty(required = True)
+
+    @classmethod
+    def by_id(cls, uid):
+        return User.get_by_id(uid, parent = users_key())
+
+    @classmethod
+    def by_name(cls, name):
+        u = User.all().filter('username =', name).get()
+        return u
+
+    @classmethod
+    def register(cls, name, pw, email=None):
+        pw_hash = auth_helpers.make_pw_hash(name, pw)
+        return User(parent = users_key(),
+                    username = name,
+                    pw_hash = pw_hash,
+                    email = email)
+    @classmethod
+    def login(cls, name, pw):
+        u = cls.by_name(name)
+        if u and auth_helpers.valid_pw(name, pw, u.pw_hash):
+            return u
+
+class SignupHandler(Handler):
+    def get(self):
+        self.render("signup_form.html")
+
+    def post(self):
+        have_error = False
+        self.user_username = self.request.get('username')
+        self.user_password = self.request.get('password')
+        self.user_verify = self.request.get('verify')
+        self.user_email = self.request.get('email')
+        
+        check_username = valid_helpers.valid_username(self.user_username)
+        check_password = valid_helpers.valid_password(self.user_password)
+        check_verify = valid_helpers.valid_verify(self.user_verify, self.user_password)
+        check_email = valid_helpers.valid_email(self.user_email)
+
+        params = dict(user_username = self.user_username, user_email = self.user_email)
+
+        if not(check_username):
+            params['error_username'] = "That's not a valid username."
+            have_error = True
+        if not(check_password):
+            params['error_password'] = "That wasn't a valid password."
+            have_error = True
+        if not(check_verify):
+            params['error_verify'] = "Your passwords didn't match."
+            have_error = True
+        if not(check_email):
+            params['error_email'] = "That's not a valid email."
+            have_error = True
+        if not have_error:
+            existing_user = User.by_name(self.user_username)
+            if existing_user:
+                params['error_username'] = "This user already exists"
+                have_error = True
+
+        if have_error:
+            self.render("signup_form.html", **params)
+        else:
+            self.done()
+
+    def done(self, *a, **kw):
+        raise NotImplementedError
+
+class RegisterHandler(SignupHandler):
+    def done(self):
+        u = User.register(self.user_username, self.user_password, self.user_email)
+        u.put()
+        self.login(u)
+        self.redirect('/unit3/welcome')
+
+class WelcomeHandler(Handler):
+    def get(self):
+        if self.user:
+            self.write("<h1>Welcome, %s</h1>" % self.user.username)
+        else:
+            self.redirect('/signup')
+
+class LoginHandler(Handler):
+    def get(self):
+        self.render("login.html")
+
+    def post(self):
+        user_username = self.request.get('username')
+        user_password = self.request.get('password')
+        params = dict(username = user_username)
+        u = User.login(user_username, user_password)
+        if u: 
+            self.login(u)
+            self.redirect('/unit3/welcome')
+        else:
+            params["error_username"] = "Invalid login"
+            params["error_password"] = " "
+            self.render("login.html", **params)
+
+class LogoutHandler(Handler):
+    def get(self):
+        self.logout()
+        self.redirect('/signup')
+
+### BLOG STUFF ###
 class Post(db.Model):
     subject = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
@@ -138,74 +269,6 @@ class XMLHandler(Handler):
         self.response.headers['Content-Type'] = 'application/atom+xml'
         self.render("xmltemplate.xml", posts=posts)
        
-class User(db.Model):
-    email = db.StringProperty(required = True)
-    encrypted_pass = db.StringProperty(required = True)
-
-class RegisterHandler(Handler):
-    def get(self):
-        self.render("register_form.html")
-
-    def post(self):
-        user_email  = self.request.get("email")
-        user_password = self.request.get("password")
-        user_verify = self.request.get("verify")
-        
-        check_email = valid_helpers.valid_email(user_email)
-        check_password = valid_helpers.valid_password(user_password)
-        check_verify = valid_helpers.valid_verify(user_password, user_verify)
-
-        params = dict(user_email = user_email)
-        have_error = False
-        query = User.all(keys_only = True).filter("email", user_email)
-        if not(check_email):
-            params['error_email'] = "Thats an invalid email"
-            have_error = True
-        if not(check_password):
-            params['error_password'] = "Thats not a valid password"
-            have_error = True
-        if not(check_verify):
-            params['error_verify'] = "Your passwords don't match"
-            have_error = True
-        if not have_error:
-            existing_user = query.get()
-            if existing_user:
-                params["error_email"] = "A user with this email already exists"
-                have_error = True
-        if have_error:
-            self.render("register_form.html", **params)
-        else:
-            encrypted_pass = auth_helpers.make_pw_hash(user_email, user_password)
-            user = User(email = user_email, encrypted_pass = encrypted_pass)
-            user.put()
-            existing_user = query.get()
-            user_id = existing_user.id()
-            user_hash = auth_helpers.make_secure_val(str(user_id))
-            self.response.headers.add_header("Set-Cookie", "user_id = %s" % str(user_hash))
-            self.redirect('/')
-
-class LoginHandler(Handler):
-    def post(self):
-        user_email = self.request.get("email")
-        user_password = self.request.get("password")
-        query = User.all().filter("email", user_email)
-        user = query.get()
-        params = dict(user_email = user_email)
-        if user:
-            check_authentic_user = auth_helpers.valid_pw(user_email, user_password, user.encrypted_pass)
-            if check_authentic_user:
-                user_hash = auth_helpers.make_secure_val(str(user.key().id()))
-                #TODO: set flash message
-                self.response.headers.add_header("Set-Cookie", "user_id = %s" % str(user_hash))
-                self.redirect('/archives')
-            else:
-                #TODO: set flash message
-                params["error_login"] = "Invalid email/password combination"
-                self.redirect('/')
-        else:
-            #TODO: set flash message
-            params["error_login"] = "Invalid email/password combination"
-            self.redirect('/')
 
 
 app = webapp2.WSGIApplication([('/', MainPage),
@@ -213,7 +276,10 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/newpost', NewPostHandler),
                                ('/archives', ArchiveHandler),
                                ('/register', RegisterHandler),
+                               ('/signup', RegisterHandler),
                                ('/login', LoginHandler),
+                               ('/unit3/welcome', WelcomeHandler),
+                               ('/logout', LogoutHandler),
                                ('/post/(\d+)', ShowPostHandler),
                                ('/post/(\d+).json', ShowPostJsonHandler),
                                ('/post/(\d+)/edit', EditPostHandler),

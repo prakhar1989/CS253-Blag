@@ -12,8 +12,10 @@ Todo:
 - RSS &#10003;
 - Archives &#10003; 
 - Make it DRY! &#10003;
-- Authentication 
+- Authentication &#10003;
 - Header with Nav
 - Search feature
 - Tags
 - Make the design responsive
+- Login via Ajax
+- Organize files (routes etc.)
