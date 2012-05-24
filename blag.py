@@ -6,8 +6,10 @@ import jinja2
 import datetime
 import time
 import markupsafe
+import logging
 from markupsafe import Markup, escape
 from google.appengine.ext import db
+from google.appengine.api import memcache
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
@@ -18,7 +20,42 @@ import markdown2
 import auth_helpers
 import valid_helpers
 
+### CACHE HELPERS ###
 
+def get_top_posts(update = False):
+    key = 'top'
+    posts = memcache.get(key)
+    last_time = memcache.get('last_time') # FOR SUBMISSION
+    if last_time:
+        last_queried = time.time() - last_time
+    else:
+        last_queried = 0
+    if posts is None or update:
+        logging.error("DB query")
+        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
+        posts = list(posts)
+        memcache.set(key, posts)
+        memcache.set('last_time', time.time())
+        last_queried = 0
+
+    logging.error("Queried %ssecs ago" % int(last_queried))
+    return posts, last_queried
+
+def get_requested_post(post_id):
+    my_post = memcache.get(post_id)
+    last_time = memcache.get("(post_time, %s)" % post_id)
+    if last_time:
+        last_queried = time.time() - last_time
+    else:
+        last_queried = 0
+    if my_post is None:
+        my_post = Post.get_by_id(int(post_id))
+        memcache.set(post_id, my_post)
+        memcache.set("(post_time, %s)" % post_id, time.time())
+        last_queried = 0
+    return my_post, last_queried
+
+### BASE HANDLER CLASS ###
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
@@ -168,11 +205,11 @@ class Post(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
     last_modified = db.DateTimeProperty(auto_now_add = True)
     is_draft = db.BooleanProperty()
-   
+
 class MainPage(Handler):
     def get(self):
-        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
-        self.render("main.html", posts=posts)
+        posts, last_queried = get_top_posts() 
+        self.render("main.html", posts=posts, last_queried = int(last_queried))
     
 class JsonPostHandler(Handler):
     def get(self):
@@ -184,7 +221,7 @@ class JsonPostHandler(Handler):
                             "created" : my_post.created.strftime('%a %b %d %H:%M:%S %Y'),
                             "last_modified" : my_post.last_modified.strftime('%a %b %d %H:%M:%S %Y')})
 
-        self.write(json.dumps(post_dict))
+        self.write(json.dumps(post_dict, indent=4))
 
 class NewPostHandler(Handler):
     def get(self):
@@ -201,16 +238,17 @@ class NewPostHandler(Handler):
             if is_draft == "on":
                 self.redirect('/drafts')
             else:
+                get_top_posts(update = True)
                 self.redirect('/')
         else:
             error = "Both subject and content please!"
             self.render("newpost.html", subject = subject, content = content, error = error)
 
-
 class ShowPostHandler(Handler):
     def get(self, post_id):
-        my_post = Post.get_by_id(int(post_id))
-        self.render("showpost.html", my_post = my_post)
+        my_post, last_queried = get_requested_post(post_id)
+        self.render("showpost.html", my_post = my_post, 
+                                     last_queried = int(last_queried))
 
 class ShowPostJsonHandler(Handler):
     def get(self, post_id):
@@ -219,7 +257,7 @@ class ShowPostJsonHandler(Handler):
         post_dict = {"subject" : my_post.subject, "content" : my_post.content, 
                     "created" : my_post.created.strftime('%a %b %d %H:%M:%S %Y'),
                     "last_modified" : my_post.last_modified.strftime('%a %b %d %H:%M:%S %Y')}
-        self.write(json.dumps(post_dict))
+        self.write(json.dumps(post_dict, indent=4))
 
 class EditPostHandler(Handler):
     def get(self, post_id):
@@ -268,6 +306,11 @@ class XMLHandler(Handler):
         posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
         self.response.headers['Content-Type'] = 'application/atom+xml'
         self.render("xmltemplate.xml", posts=posts)
+
+class FlushCacheHandler(Handler):
+    def get(self):
+        memcache.flush_all()
+        self.redirect('/')
        
 
 
@@ -285,4 +328,5 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/post/(\d+)/edit', EditPostHandler),
                                ('/post/(\d+)/delete', DeletePostHandler),
                                ('/feeds/all.atom.xml', XMLHandler),
+                               ('/flush', FlushCacheHandler),
                                ('/drafts',DraftHandler)], debug=True)
