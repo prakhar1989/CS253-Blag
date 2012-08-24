@@ -31,7 +31,6 @@ a:hover {
     margin: 80px auto;
 }
 .header_post{
-    background: url('../static/post_top.png') no-repeat 5px 0px;
     padding-left: 13px;
     position: relative;
 }

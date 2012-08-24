@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="header_post">
-    <div class="post drop-shadow">
+    <div class="post">
         <h3 class="post-subject"><a href="#">{{ my_post.subject }}</a></h3>
         {% if logged_in %}
         <div class="action-icons">
@@ -16,6 +16,7 @@
         {% endif %}
         <small>Posted on {{ my_post.created.strftime('%d %b, %Y') }}</small>
         <div class="post-content">{{ my_post.content | safe }}</div>
+        <!--
         <hr>
         <div id="disqus_thread"></div>
         <script type="text/javascript">
@@ -27,6 +28,7 @@
             })();
         </script>
         <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        -->
     </div>
 </div>
 {% endblock %}
