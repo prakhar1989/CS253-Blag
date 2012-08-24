@@ -1,3 +1,9 @@
+@font-face {
+    font-family: SourceSans;
+    src: url('/static/sourcesans.ttf');
+    font-weight:400;
+}
+
 .small, small {
 	font-size: 13px;
 	line-height: 18px;
@@ -13,7 +19,8 @@ img::-moz-selection	{background: transparent;}
 body {
 	background: #f9f9f9;
 	color: #34363E;
-    font-family: "adelle-1","adelle-2", sans-serif;
+    /*font-family: "adelle-1","adelle-2", sans-serif; */
+    font-family: "SourceSans";
     border-top: 5px solid #756199;
 }
 
@@ -27,7 +34,7 @@ a:hover {
 }
 
 .main {
-    width: 710px;
+    width: 50%;
     margin: 80px auto;
 }
 .header_post{
@@ -40,14 +47,12 @@ a:hover {
     font-size: 18px;
     margin-top: 20px;
     border-bottom: 1px #333;
-    font-family: "adelle-1","adelle-2";
     padding-top: 68px;
     padding-bottom: 20px;
 }
 
 .post-subject{
     font-size: 22px;
-    font-family: "adelle-1","adelle-2";
     text-transform: uppercase;
 }
 

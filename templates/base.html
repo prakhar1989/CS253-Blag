@@ -4,8 +4,10 @@
 	<meta charset=UTF-8>
 	<meta name=viewport content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
     <title>Blag</title>
+    <!--
     <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    -->
     <!-- 1140px Grid styles for IE -->
 	<!--[if lte IE 9]><link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" /><![endif]-->
     <link rel=stylesheet href="/stylesheets/blueprint.css">
@@ -26,10 +28,8 @@
     
 </head>
 <body lang="en">
-<div class="container">
-    <div class="main">
-        {% block body %} {% endblock %}
-    </div>
+<div class="main">
+    {% block body %} {% endblock %}
 </div>
 <!-- FOOTER BEGINS HERE -->
 <footer>
@@ -38,9 +38,9 @@
     <div class="main">
         <hr>
         <li><a href="/">Home</a></li>
-        <li><a href="./feeds/all.atom.xml">RSS</a></li>
-        <li><a href="https://github.com/prakhar1989">GitHub</a></li>
         <li><a href="http://about.me/prakhar9">About</a></li>
+        <li><a href="https://github.com/prakhar1989">GitHub</a></li>
+        <li><a href="./feeds/all.atom.xml">RSS</a></li>
     </div>
 </ul>
 </nav>
