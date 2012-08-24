@@ -22,39 +22,13 @@ a {
     color: #34363E;
 }
 
-section#login_box{
-    display: none;
-    width: 350px;
-    margin: 0px auto;
-    background: #eee;
-    padding: 40px;
-}
-
-section#login_box label {
-    display: block;
-}
-
 a:hover {
     color: #756199;
 }
 
-.banner ul {
-    margin-top: 180px;
-}
-.banner ul li{
-    font-family: "adelle-1","adelle-2";
-    font-size: 16px;
-    list-style-type: none;
-    margin: 15px 0px;
-    text-transform: uppercase;
-    background: #EAE8E9;
-    padding: 5px;
-    border-radius: 4px;
-}
-
-#logo{
-    float: left;
-    margin-top: 40px;
+.main {
+    width: 710px;
+    margin: 80px auto;
 }
 .header_post{
     background: url('../static/post_top.png') no-repeat 5px 0px;
@@ -323,7 +297,7 @@ footer {
 
 /* ARCHIVES */
 .listing {
-    margin-top: 50px;
+    margin-top: 10px;
 }
 .listing li {
     list-style-type: none;

@@ -115,11 +115,6 @@ class MainPage(Handler):
         #self.render("main.html", posts=posts, last_queried = int(last_queried))
         self.render("archives.html", posts=posts)
 
-class ArchiveHandler(Handler):
-    def get(self):
-        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
-        self.render("archives.html", posts=posts)
-    
 class JsonPostHandler(Handler):
     def get(self):
         self.response.headers['Content-type'] = 'application/json'
@@ -239,7 +234,6 @@ class FlushCacheHandler(Handler):
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/.json', JsonPostHandler),
                                ('/post/new', NewPostHandler),
-                               ('/archives', ArchiveHandler),
                                ('/login', LoginHandler),
                                ('/logout', LogoutHandler),
                                ('/post/(\d+)', ShowPostHandler),
