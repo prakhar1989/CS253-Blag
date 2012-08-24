@@ -3,7 +3,7 @@
     <ul class="listing">
     {% for post in posts %}
         <li>
-            <a href="/post/{{post.key().id()}}">{{ post.subject }}</a> <span>{{ post.created.strftime('%d %b, %Y') }}</span>
+            <a href="/post/{{post.key().id()}}">{{ post.subject }}</a> <span class="time">{{ post.created.strftime('%d %b, %Y') }}</span>
         </li>
     {% endfor %}
     </div>

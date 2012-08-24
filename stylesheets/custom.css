@@ -29,6 +29,9 @@ a {
     color: #34363E;
 }
 
+.time {
+    padding-top: 10px;
+}
 a:hover {
     color: #756199;
 }
@@ -241,6 +244,11 @@ form.newpost img {
 footer {
     margin-top: 40px;
 }
+
+footer ul {
+    border-top: 1px solid #EEE;
+}
+
 .footer li {
     float:left;
     list-style-type: none;
