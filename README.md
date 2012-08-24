@@ -14,9 +14,4 @@ Todo:
 - Make it DRY! &#10003;
 - Authentication &#10003;
 - Caching (memcached) &#10003;
-- Header with Nav
-- Search feature
-- Tags
 - Make the design responsive
-- Login via Ajax
-- Organize files (routes etc.)

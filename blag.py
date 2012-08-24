@@ -21,7 +21,6 @@ import auth_helpers
 import valid_helpers
 
 ### CACHE HELPERS ###
-
 def get_top_posts(update = False):
     key = 'top'
     posts = memcache.get(key)
@@ -67,114 +66,19 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
-    def set_secure_cookie(self, name, val):
-        cookie_val = auth_helpers.make_secure_val(val)
-        self.response.headers.add_header(
-                'Set-Cookie', "%s=%s; Path=/" % (name, cookie_val))
-
-    def read_secure_cookie(self, name):
-        cookie_val = self.request.cookies.get(name)
-        return cookie_val and auth_helpers.check_secure_val(cookie_val)
-
-    def login(self, user):
-        self.set_secure_cookie('user_id', str(user.key().id()))
+    def logged_in(self):
+        cookie_val = self.request.cookies.get("logged_in")
+        if cookie_val:
+            return auth_helpers.check_secure_val(cookie_val) == "1"
+        else:
+            return False
 
     def logout(self):
-        self.response.headers.add_header('Set-Cookie', 'user_id=; Path=/')
+        self.response.delete_cookie("logged_in")
 
-    def initialize(self, *a, **kw):
-        webapp2.RequestHandler.initialize(self, *a, **kw)
-        uid = self.read_secure_cookie('user_id')
-        self.user = uid and User.by_id(int(uid))
-
-def users_key(group = "default"):
-    return db.Key.from_path('users', group)
-
-### AUTH STUFF ###
-class User(db.Model):
-    username = db.StringProperty(required = True)
-    email = db.StringProperty()
-    pw_hash = db.StringProperty(required = True)
-
-    @classmethod
-    def by_id(cls, uid):
-        return User.get_by_id(uid, parent = users_key())
-
-    @classmethod
-    def by_name(cls, name):
-        u = User.all().filter('username =', name).get()
-        return u
-
-    @classmethod
-    def register(cls, name, pw, email=None):
-        pw_hash = auth_helpers.make_pw_hash(name, pw)
-        return User(parent = users_key(),
-                    username = name,
-                    pw_hash = pw_hash,
-                    email = email)
-    @classmethod
-    def login(cls, name, pw):
-        u = cls.by_name(name)
-        if u and auth_helpers.valid_pw(name, pw, u.pw_hash):
-            return u
-
-class SignupHandler(Handler):
-    def get(self):
-        self.render("signup_form.html")
-
-    def post(self):
-        have_error = False
-        self.user_username = self.request.get('username')
-        self.user_password = self.request.get('password')
-        self.user_verify = self.request.get('verify')
-        self.user_email = self.request.get('email')
-        
-        check_username = valid_helpers.valid_username(self.user_username)
-        check_password = valid_helpers.valid_password(self.user_password)
-        check_verify = valid_helpers.valid_verify(self.user_verify, self.user_password)
-        check_email = valid_helpers.valid_email(self.user_email)
-
-        params = dict(user_username = self.user_username, user_email = self.user_email)
-
-        if not(check_username):
-            params['error_username'] = "That's not a valid username."
-            have_error = True
-        if not(check_password):
-            params['error_password'] = "That wasn't a valid password."
-            have_error = True
-        if not(check_verify):
-            params['error_verify'] = "Your passwords didn't match."
-            have_error = True
-        if not(check_email):
-            params['error_email'] = "That's not a valid email."
-            have_error = True
-        if not have_error:
-            existing_user = User.by_name(self.user_username)
-            if existing_user:
-                params['error_username'] = "This user already exists"
-                have_error = True
-
-        if have_error:
-            self.render("signup_form.html", **params)
-        else:
-            self.done()
-
-    def done(self, *a, **kw):
-        raise NotImplementedError
-
-class RegisterHandler(SignupHandler):
-    def done(self):
-        u = User.register(self.user_username, self.user_password, self.user_email)
-        u.put()
-        self.login(u)
-        self.redirect('/unit3/welcome')
-
-class WelcomeHandler(Handler):
-    def get(self):
-        if self.user:
-            self.write("<h1>Welcome, %s</h1>" % self.user.username)
-        else:
-            self.redirect('/signup')
+    def login(self):
+        self.response.set_cookie("logged_in",
+                                 auth_helpers.make_secure_val("1"))
 
 class LoginHandler(Handler):
     def get(self):
@@ -184,10 +88,9 @@ class LoginHandler(Handler):
         user_username = self.request.get('username')
         user_password = self.request.get('password')
         params = dict(username = user_username)
-        u = User.login(user_username, user_password)
-        if u: 
-            self.login(u)
-            self.redirect('/unit3/welcome')
+        if user_username == "admin" and user_password == "admin":
+            self.redirect('/')
+            self.login()
         else:
             params["error_username"] = "Invalid login"
             params["error_password"] = " "
@@ -196,7 +99,7 @@ class LoginHandler(Handler):
 class LogoutHandler(Handler):
     def get(self):
         self.logout()
-        self.redirect('/signup')
+        self.redirect('/')
 
 ### BLOG STUFF ###
 class Post(db.Model):
@@ -209,7 +112,13 @@ class Post(db.Model):
 class MainPage(Handler):
     def get(self):
         posts, last_queried = get_top_posts() 
-        self.render("main.html", posts=posts, last_queried = int(last_queried))
+        #self.render("main.html", posts=posts, last_queried = int(last_queried))
+        self.render("archives.html", posts=posts)
+
+class ArchiveHandler(Handler):
+    def get(self):
+        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
+        self.render("archives.html", posts=posts)
     
 class JsonPostHandler(Handler):
     def get(self):
@@ -225,30 +134,38 @@ class JsonPostHandler(Handler):
 
 class NewPostHandler(Handler):
     def get(self):
-        self.render("newpost.html")
+        if self.logged_in():
+            self.render("newpost.html")
+        else:
+            self.abort(403)
 
     def post(self):
-        subject = self.request.get("subject")
-        content = Markup(markdown2.markdown(self.request.get("content")))
-        is_draft = self.request.get("is_draft")
-        
-        if subject and content:
-            p = Post(subject = subject, content = content, is_draft = (is_draft == "on"))
-            p.put()
-            if is_draft == "on":
-                self.redirect('/drafts')
+        if self.logged_in():
+            self.render("newpost.html")
+            subject = self.request.get("subject")
+            content = Markup(markdown2.markdown(self.request.get("content")))
+            is_draft = self.request.get("is_draft")
+            
+            if subject and content:
+                p = Post(subject = subject, content = content, is_draft = (is_draft == "on"))
+                p.put()
+                if is_draft == "on":
+                    self.redirect('/drafts')
+                else:
+                    get_top_posts(update = True)
+                    self.redirect('/')
             else:
-                get_top_posts(update = True)
-                self.redirect('/')
+                error = "Both subject and content please!"
+                self.render("newpost.html", subject = subject, content = content, error = error)
         else:
-            error = "Both subject and content please!"
-            self.render("newpost.html", subject = subject, content = content, error = error)
+            self.abort(403)
 
 class ShowPostHandler(Handler):
     def get(self, post_id):
         my_post, last_queried = get_requested_post(post_id)
         self.render("showpost.html", my_post = my_post, 
-                                     last_queried = int(last_queried))
+                                     last_queried = int(last_queried),
+                                     logged_in = self.logged_in())
 
 class ShowPostJsonHandler(Handler):
     def get(self, post_id):
@@ -261,45 +178,52 @@ class ShowPostJsonHandler(Handler):
 
 class EditPostHandler(Handler):
     def get(self, post_id):
-        my_post = Post.get_by_id(int(post_id))
-        self.render("editpost.html", subject = my_post.subject, content = my_post.content)
+        if self.logged_in():
+            my_post = Post.get_by_id(int(post_id))
+            self.render("editpost.html", subject = my_post.subject, content = my_post.content)
+        else:
+            self.abort(403)
 
     def post(self, post_id):
-        subject = self.request.get("subject")
-        content = Markup(markdown2.markdown(self.request.get("content")))
-        last_modified = datetime.datetime.now()
-        is_draft = self.request.get("is_draft")
-        
-        if subject and content:
-            my_post = Post.get_by_id(int(post_id))
-            my_post.subject = subject
-            my_post.content = content
-            my_post.is_draft = (is_draft == "on")
-            my_post.put()
+        if self.logged_in():
+            subject = self.request.get("subject")
+            content = Markup(markdown2.markdown(self.request.get("content")))
+            last_modified = datetime.datetime.now()
+            is_draft = self.request.get("is_draft")
+            
+            if subject and content:
+                my_post = Post.get_by_id(int(post_id))
+                my_post.subject = subject
+                my_post.content = content
+                my_post.is_draft = (is_draft == "on")
+                my_post.put()
 
-            if is_draft == "on":
-                self.redirect('/drafts')
+                if is_draft == "on":
+                    self.redirect('/drafts')
+                else:
+                    memcache.flush_all()
+                    self.redirect('/')
+                    self.redirect('/post/' + str(my_post.key().id()))
             else:
-                self.redirect('/post/' + str(my_post.key().id()))
+                error = "Both subject and content please!"
+                self.render("editpost.html", subject = subject, content = content, error = error)
         else:
-            error = "Both subject and content please!"
-            self.render("editpost.html", subject = subject, content = content, error = error)
+            self.abort(403)
 
 class DraftHandler(Handler):
     def get(self):
         posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = TRUE ORDER BY created DESC")
         self.render("main.html", posts=posts)
 
-class ArchiveHandler(Handler):
-    def get(self):
-        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
-        self.render("archives.html", posts=posts)
 
 class DeletePostHandler(Handler):
     def get(self, post_id):
-        my_post = Post.get_by_id(int(post_id))
-        my_post.delete()
-        self.redirect('/')
+        if self.logged_in():
+            my_post = Post.get_by_id(int(post_id))
+            my_post.delete()
+            self.redirect('/')
+        else:
+            self.abort(403)
 
 class XMLHandler(Handler):
     def get(self):
@@ -312,16 +236,11 @@ class FlushCacheHandler(Handler):
         memcache.flush_all()
         self.redirect('/')
        
-
-
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/.json', JsonPostHandler),
-                               ('/newpost', NewPostHandler),
+                               ('/post/new', NewPostHandler),
                                ('/archives', ArchiveHandler),
-                               ('/register', RegisterHandler),
-                               ('/signup', RegisterHandler),
                                ('/login', LoginHandler),
-                               ('/unit3/welcome', WelcomeHandler),
                                ('/logout', LogoutHandler),
                                ('/post/(\d+)', ShowPostHandler),
                                ('/post/(\d+).json', ShowPostJsonHandler),

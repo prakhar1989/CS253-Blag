@@ -349,25 +349,31 @@ footer {
 
 	body {
         font-size: 11px;
+        background: white;
         -webkit-text-size-adjust: none;
 	}
-	
+
+    .drop-shadow{
+    -webkit-box-shadow:0 0px 0px rgba(0, 0, 0, 0.0);
+       -moz-box-shadow:0 0px 0px rgba(0, 0, 0, 0.0);
+            box-shadow:0 0px 0px rgba(0, 0, 0, 0.0);
+    }
 	.row, body, .container {
-	width: 100%;
-	min-width: 0;
-	margin-left: 0px;
-	margin-right: 0px;
-	padding-left: 0px;
-	padding-right: 0px;
+        width: 100%;
+        min-width: 0;
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
 	}
 	
 	.row .onecol, .row .twocol, .row .threecol, .row .fourcol, .row .fivecol, .row .sixcol, .row .sevencol, .row .eightcol, .row .ninecol, .row .tencol, .row .elevencol, .row .twelvecol {
-	width: auto;
-	float: none;
-	margin-left: 0px;
-	margin-right: 0px;
-	padding-left: 20px;
-	padding-right: 20px;
+        width: auto;
+        float: none;
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 20px;
+        padding-right: 20px;
 	}
     
     .span-18 {
@@ -391,6 +397,11 @@ footer {
     }
     .post-content {
         padding: 1.3em 1.3em;
+    }
+
+    .post-subject a {
+        background: white;
+        color: #756199;
     }
 
 }
