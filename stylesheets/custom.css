@@ -37,7 +37,7 @@ a:hover {
 }
 
 .main {
-    width: 50%;
+    max-width: 700px;
     margin: 80px auto;
 }
 .header_post{
@@ -54,6 +54,10 @@ a:hover {
     padding-bottom: 20px;
 }
 
+.post a{
+    color: #756199;
+}
+
 .post-subject{
     font-size: 22px;
     text-transform: uppercase;
@@ -61,7 +65,7 @@ a:hover {
 
 .post-subject a{
     background: #756199;
-    color: white !important;
+    color: white;
     padding: 13px 15px 13px 10px;
 }
 .post-content{
@@ -167,9 +171,6 @@ form.newpost img {
     font-size: 16px;
     font-weight: 800;
 }
-.post a{
-    color: #756199;
-}
 
 .post blockquote{
     border-left: 10px solid #756199;
@@ -252,7 +253,7 @@ footer ul {
 .footer li {
     float:left;
     list-style-type: none;
-    margin: 2em 4em;
+    margin: 1em 2em;
 }
 
 .footer li a {
@@ -332,62 +333,34 @@ footer ul {
 
 
 @media handheld, only screen and (max-width: 767px) {
-
-	body {
-        font-size: 11px;
+    body {
         background: white;
-        -webkit-text-size-adjust: none;
-	}
+    }
 
-    .drop-shadow{
-    -webkit-box-shadow:0 0px 0px rgba(0, 0, 0, 0.0);
-       -moz-box-shadow:0 0px 0px rgba(0, 0, 0, 0.0);
-            box-shadow:0 0px 0px rgba(0, 0, 0, 0.0);
-    }
-	.row, body, .container {
-        width: 100%;
-        min-width: 0;
-        margin-left: 0px;
-        margin-right: 0px;
-        padding-left: 0px;
-        padding-right: 0px;
-	}
-	
-	.row .onecol, .row .twocol, .row .threecol, .row .fourcol, .row .fivecol, .row .sixcol, .row .sevencol, .row .eightcol, .row .ninecol, .row .tencol, .row .elevencol, .row .twelvecol {
-        width: auto;
-        float: none;
-        margin-left: 0px;
-        margin-right: 0px;
-        padding-left: 20px;
-        padding-right: 20px;
-	}
-    
-    .span-18 {
-        width: 300px;
-    }
-    .post {
-        font-size: 14px;
-        padding: 0px;
+    .main {
         margin: 0px;
     }
-    .post a {
-        font-size: 14px;
-        margin: 20px 0px;
+
+    .post {
+        padding-top: 10px;
+    }
+    .time {
+        visibility: hidden;
     }
 
-    small {
-        margin: none;
+    .post-content{
+        padding: 1em;
     }
-    .header_post {
-        background: white;
+    .footer li {
+        margin: 1em;
     }
-    .post-content {
-        padding: 1.3em 1.3em;
+    .post small {
+        float: none;
+        margin: 0px 20px;
     }
-
     .post-subject a {
-        background: white;
+        background: none;
+        padding: 1em;
         color: #756199;
     }
-
 }
