@@ -4,8 +4,6 @@
 	<meta charset=UTF-8>
 	<meta name=viewport content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
     <title>Blag | {% block title %}{% endblock %}</title>
-    <script type="text/javascript" src="http://use.typekit.com/ahz1kiy.js"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <link rel=stylesheet href="/stylesheets/blueprint.css">
     <link rel=stylesheet href="/stylesheets/custom.css">
@@ -14,6 +12,9 @@
 <div class="container">
 	<div class=span-12>
         <form method="post" class="newpost">
+            <p>
+            <input type="checkbox" name="is_quote">quote?</input>
+            </p>
             <p>
             <input type="text" name="subject" placeholder="Title here" value="{{ subject }}">
             </p>

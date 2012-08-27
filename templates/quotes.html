@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block body %}
+{% for q in quotes %}
+<div class="header_post">
+    <div class="post">
+        <h3 class="post-subject quote"><a href="#">{{ q.subject }}</a></h3>
+        {% if logged_in %}
+        <div class="action-icons">
+        <ul>
+            <li><a href="/post/{{ q.key().id() }}/edit" original-title="Edit Post!"><img src="../static/edit.png"></img></a></li>
+            <li><a id="delete_btn" href="/post/{{ q.key().id() }}/delete" original-title="Delete Post!"
+                    onClick="if(confirm('Are you sure you want to delete this post?'))
+                    return true; 
+                    else return false;"><img src="../static/trash.png"></img></a></li>
+        </ul>
+        </div>
+        {% endif %}
+        <small>Posted on {{ q.created.strftime('%d %b, %Y') }}</small>
+        <div class="post-content">{{ q.content | safe }}</div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

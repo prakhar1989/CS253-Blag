@@ -15,3 +15,10 @@ indexes:
   - name: is_draft
   - name: created
     direction: desc
+
+- kind: Post
+  properties:
+  - name: is_draft
+  - name: is_quote
+  - name: created
+    direction: desc

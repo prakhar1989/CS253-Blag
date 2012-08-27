@@ -24,35 +24,28 @@ import valid_helpers
 def get_top_posts(update = False):
     key = 'top'
     posts = memcache.get(key)
-    last_time = memcache.get('last_time') # FOR SUBMISSION
-    if last_time:
-        last_queried = time.time() - last_time
-    else:
-        last_queried = 0
     if posts is None or update:
-        logging.error("DB query")
-        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE ORDER BY created DESC")
+        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE AND is_quote = FALSE ORDER BY created DESC")
         posts = list(posts)
         memcache.set(key, posts)
-        memcache.set('last_time', time.time())
-        last_queried = 0
+    return posts
 
-    logging.error("Queried %ssecs ago" % int(last_queried))
-    return posts, last_queried
+def get_top_quotes(update = False):
+    key = 'quote'
+    posts = memcache.get(key)
+    if posts is None or update:
+        posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = FALSE AND is_quote = TRUE ORDER BY created DESC")
+        posts = list(posts)
+        memcache.set(key, posts)
+    return posts
 
 def get_requested_post(post_id):
     my_post = memcache.get(post_id)
-    last_time = memcache.get("(post_time, %s)" % post_id)
-    if last_time:
-        last_queried = time.time() - last_time
-    else:
-        last_queried = 0
     if my_post is None:
         my_post = Post.get_by_id(int(post_id))
         memcache.set(post_id, my_post)
         memcache.set("(post_time, %s)" % post_id, time.time())
-        last_queried = 0
-    return my_post, last_queried
+    return my_post
 
 ### BASE HANDLER CLASS ###
 class Handler(webapp2.RequestHandler):
@@ -108,12 +101,22 @@ class Post(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
     last_modified = db.DateTimeProperty(auto_now_add = True)
     is_draft = db.BooleanProperty()
+    is_quote = db.BooleanProperty(required = True)
 
 class MainPage(Handler):
     def get(self):
-        posts, last_queried = get_top_posts() 
-        #self.render("main.html", posts=posts, last_queried = int(last_queried))
+        posts = get_top_posts() 
+        self.render("home.html", posts=posts)
+
+class BlogHandler(Handler):
+    def get(self):
+        posts = get_top_posts() 
         self.render("archives.html", posts=posts)
+
+class QuotesHandler(Handler):
+    def get(self):
+        quotes = get_top_quotes()
+        self.render("quotes.html", quotes = quotes)
 
 class JsonPostHandler(Handler):
     def get(self):
@@ -139,13 +142,19 @@ class NewPostHandler(Handler):
             self.render("newpost.html")
             subject = self.request.get("subject")
             content = Markup(markdown2.markdown(self.request.get("content")))
+            is_quote = self.request.get("is_quote")
             is_draft = self.request.get("is_draft")
             
             if subject and content:
-                p = Post(subject = subject, content = content, is_draft = (is_draft == "on"))
+                p = Post(subject = subject, content = content,
+                        is_draft = (is_draft == "on"),
+                        is_quote = (is_quote == "on"))
                 p.put()
                 if is_draft == "on":
                     self.redirect('/drafts')
+                elif is_quote == "on":
+                    get_top_quotes(update = True)
+                    self.redirect('/quotes')
                 else:
                     get_top_posts(update = True)
                     self.redirect('/')
@@ -157,9 +166,8 @@ class NewPostHandler(Handler):
 
 class ShowPostHandler(Handler):
     def get(self, post_id):
-        my_post, last_queried = get_requested_post(post_id)
+        my_post = get_requested_post(post_id)
         self.render("showpost.html", my_post = my_post, 
-                                     last_queried = int(last_queried),
                                      logged_in = self.logged_in())
 
 class ShowPostJsonHandler(Handler):
@@ -210,13 +218,12 @@ class DraftHandler(Handler):
         posts = db.GqlQuery("SELECT * FROM Post WHERE is_draft = TRUE ORDER BY created DESC")
         self.render("main.html", posts=posts)
 
-
 class DeletePostHandler(Handler):
     def get(self, post_id):
         if self.logged_in():
             my_post = Post.get_by_id(int(post_id))
             my_post.delete()
-            self.redirect('/')
+            self.redirect('/flush')
         else:
             self.abort(403)
 
@@ -233,7 +240,9 @@ class FlushCacheHandler(Handler):
        
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/.json', JsonPostHandler),
+                               ('/blog', BlogHandler),
                                ('/post/new', NewPostHandler),
+                               ('/quotes', QuotesHandler),
                                ('/login', LoginHandler),
                                ('/logout', LogoutHandler),
                                ('/post/(\d+)', ShowPostHandler),
